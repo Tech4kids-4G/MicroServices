@@ -3,6 +3,8 @@ package club.tech4kids.demo.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import club.tech4kids.demo.dao.ProductDAO;
+import club.tech4kids.demo.exception.ProduitIntrouvableException;
 import club.tech4kids.demo.model.Product;
 
 @RestController
 public class ProductController {
-
+	
 	@Autowired
 	private ProductDAO prodcutDAO;
 	
@@ -29,8 +32,10 @@ public class ProductController {
 	  }
 	
 	@GetMapping(value = "Product/{id}")
-	public Product afficheProduct(@PathVariable int id) {
-		return prodcutDAO.findById(id);
+	public Product afficheProduct(@PathVariable int id) throws ProduitIntrouvableException {
+		Product produit = prodcutDAO.findById(id);
+		if (produit == null){ throw new ProduitIntrouvableException("Le produit avec l'id: " + id + " n'exit pas");}
+		return produit;
 	}
 	
 	@GetMapping(value = "ListeProducts")
@@ -49,7 +54,7 @@ public class ProductController {
 	}
 	
 	@PostMapping(value = "AddProduct")
-	public ResponseEntity<Void> ajouterProduct(@RequestBody Product product) {
+	public ResponseEntity<Void> ajouterProduct(@Valid @RequestBody Product product) {
 		Product created_product = prodcutDAO.save(product);
 		if (created_product == null) {
 			return ResponseEntity.badRequest().build();

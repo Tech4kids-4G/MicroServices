@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import org.hibernate.validator.constraints.Length;
+
 @Entity
 public class Product {
 	
@@ -16,7 +18,8 @@ public class Product {
 	@Id
 	@GeneratedValue
 	private int id;
-//#@JsonIgnore
+	//#@JsonIgnore
+	@Length(min =3, max = 25)
 	private String name;
 	private int prix;
 	/**
