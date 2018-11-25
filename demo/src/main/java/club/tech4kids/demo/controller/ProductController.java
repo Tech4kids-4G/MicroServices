@@ -18,7 +18,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import club.tech4kids.demo.dao.ProductDAO;
 import club.tech4kids.demo.exception.ProduitIntrouvableException;
 import club.tech4kids.demo.model.Product;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+@Api( description="API pour les opérations CRUD sur les produits.")	
 @RestController
 public class ProductController {
 	
@@ -30,7 +32,8 @@ public class ProductController {
 	  public String home() {
 	    return "Spring boot is working!";
 	  }
-	
+
+	@ApiOperation(value = "Récupère un produit grâce à son ID à condition que celui-ci soit en stock!")
 	@GetMapping(value = "Product/{id}")
 	public Product afficheProduct(@PathVariable int id) throws ProduitIntrouvableException {
 		Product produit = prodcutDAO.findById(id);
@@ -48,7 +51,7 @@ public class ProductController {
 		return prodcutDAO.findByPrixGreaterThan(prixlimit);
 	}
 	
-	@GetMapping(value = "ListeProductsPrixMax/{prixmax}")
+	@GetMapping(value = "test/ListeProductsPrixMax/{prixmax}")
 	public List<Product> listeProductsPrixMax(@PathVariable int prixmax) {
 		return prodcutDAO.findByPrixMax(prixmax);
 	}
